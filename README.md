@@ -48,7 +48,7 @@ Enter your master password to unlock the vault. Then:
 | Ctrl+T | Copy TOTP code |
 | Ctrl+R | Sync from server |
 | Ctrl+X | Clear search |
-| Space | Shortcut mode (when search empty) |
+| Ctrl+Space | Shortcut mode |
 | Esc | Back / Quit |
 
 ## Configuration

@@ -326,8 +326,8 @@ export function App() {
 
 		// Search mode specific
 		if (state.mode === "search") {
-			// Space as first keystroke enters shortcut mode
-			if (input === " " && query === "") {
+			// Ctrl+Space enters shortcut mode (works even with search text)
+			if (key.ctrl && input === " ") {
 				setState((s) => ({ ...s, mode: "shortcut" }));
 				return;
 			}
@@ -464,7 +464,7 @@ export function App() {
 			)}
 			<Box marginTop={1}>
 				<Text color="gray">
-					[↑↓] navigate [Alt+1-9] jump [Enter] detail [Space] shortcuts
+					[↑↓] navigate [Alt+1-9] jump [Enter] detail [Ctrl+Space] shortcuts
 					[Ctrl+U]ser [Ctrl+P]ass [Ctrl+T]OTP [Ctrl+R] sync [Ctrl+X] clear [Esc]
 					quit
 				</Text>
