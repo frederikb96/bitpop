@@ -326,8 +326,8 @@ export function App() {
 
 		// Search mode specific
 		if (state.mode === "search") {
-			// Ctrl+Space enters shortcut mode (works even with search text)
-			if (key.ctrl && input === " ") {
+			// Ctrl+S enters shortcut mode (works even with search text)
+			if (key.ctrl && input === "s") {
 				setState((s) => ({ ...s, mode: "shortcut" }));
 				return;
 			}
@@ -380,6 +380,26 @@ export function App() {
 					selectedIndex: Math.max(
 						0,
 						Math.min(results.length - 1, s.selectedIndex + 1),
+					),
+				}));
+				return;
+			}
+
+			// Page Up/Down - move by half visible entries
+			const pageStep = Math.floor(state.config.max_visible_entries / 2);
+			if (key.pageUp) {
+				setState((s) => ({
+					...s,
+					selectedIndex: Math.max(0, s.selectedIndex - pageStep),
+				}));
+				return;
+			}
+			if (key.pageDown) {
+				setState((s) => ({
+					...s,
+					selectedIndex: Math.min(
+						results.length - 1,
+						s.selectedIndex + pageStep,
 					),
 				}));
 				return;
@@ -464,7 +484,7 @@ export function App() {
 			)}
 			<Box marginTop={1}>
 				<Text color="gray">
-					[↑↓] navigate [Alt+1-9] jump [Enter] detail [Ctrl+Space] shortcuts
+					[↑↓/PgUp/Dn] navigate [Alt+1-9] jump [Enter] detail [Ctrl+S] shortcuts
 					[Ctrl+U]ser [Ctrl+P]ass [Ctrl+T]OTP [Ctrl+R] sync [Ctrl+X] clear [Esc]
 					quit
 				</Text>

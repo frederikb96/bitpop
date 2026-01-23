@@ -42,13 +42,14 @@ Enter your master password to unlock the vault. Then:
 |-----|--------|
 | Type | Fuzzy search |
 | ↑/↓ | Navigate results |
+| PgUp/PgDn | Jump by half page |
 | Enter | View item details |
 | Ctrl+U | Copy username |
 | Ctrl+P | Copy password |
 | Ctrl+T | Copy TOTP code |
 | Ctrl+R | Sync from server |
 | Ctrl+X | Clear search |
-| Ctrl+Space | Shortcut mode |
+| Ctrl+S | Shortcut mode |
 | Esc | Back / Quit |
 
 ## Configuration

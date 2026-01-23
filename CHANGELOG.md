@@ -7,9 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Page Up/Down navigation - jumps by half the visible entries
+
 ### Changed
 
-- Shortcut mode trigger changed from Space (when empty) to Ctrl+Space (works anytime)
+- Shortcut mode trigger changed from Space to Ctrl+S (works anytime)
 
 ## [0.0.0] - 2026-01-23
 
