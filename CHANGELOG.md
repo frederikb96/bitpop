@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Page Up/Down navigation - jumps by half the visible entries
+- Backspace to go back from detail/shortcut mode (safer alternative to Esc)
 
 ### Changed
 

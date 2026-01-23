@@ -274,6 +274,18 @@ export function App() {
 			return;
 		}
 
+		// Backspace to go back (safer than Esc - won't exit from wrong mode)
+		if (key.backspace || key.delete) {
+			if (state.mode === "detail") {
+				setState((s) => ({ ...s, mode: "search", selectedItem: null }));
+				return;
+			}
+			if (state.mode === "shortcut") {
+				setState((s) => ({ ...s, mode: "search" }));
+				return;
+			}
+		}
+
 		// Shortcut mode
 		if (state.mode === "shortcut") {
 			const shortcut = state.config.shortcuts.find(
