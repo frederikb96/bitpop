@@ -1,0 +1,7 @@
+auto_close_hours: 8
+shortcuts:
+  - key: "g"
+    search: "github"
+    description: "GitHub accounts"
+  - key: "a"
+    search: "aws"

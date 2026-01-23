@@ -1,0 +1,54 @@
+[
+	{
+		"id": "item-1",
+		"type": 1,
+		"name": "GitHub Personal",
+		"favorite": false,
+		"reprompt": 0,
+		"login": {
+			"username": "user@example.com",
+			"password": "secret123",
+			"totp": "JBSWY3DPEHPK3PXP",
+			"uris": [{ "uri": "https://github.com" }]
+		}
+	},
+	{
+		"id": "item-2",
+		"type": 1,
+		"name": "AWS Console",
+		"favorite": true,
+		"reprompt": 0,
+		"login": {
+			"username": "admin@company.com",
+			"password": "awspass",
+			"uris": [
+				{ "uri": "https://console.aws.amazon.com" },
+				{ "uri": "https://aws.amazon.com" }
+			]
+		}
+	},
+	{
+		"id": "item-3",
+		"type": 2,
+		"name": "API Keys Note",
+		"favorite": false,
+		"reprompt": 0,
+		"secureNote": { "type": 0 },
+		"notes": "Some API keys stored here"
+	},
+	{
+		"id": "item-4",
+		"type": 3,
+		"name": "Personal Visa",
+		"favorite": false,
+		"reprompt": 1,
+		"card": {
+			"cardholderName": "John Doe",
+			"brand": "Visa",
+			"number": "4111111111111111",
+			"expMonth": "12",
+			"expYear": "2025",
+			"code": "123"
+		}
+	}
+]

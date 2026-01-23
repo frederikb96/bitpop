@@ -1,0 +1,36 @@
+{
+	"name": "bitpop",
+	"version": "0.0.0",
+	"description": "TUI wrapper for Bitwarden CLI with fuzzy search",
+	"author": "Frederik Berg <fberg@posteo.de>",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/frederikb96/bitpop.git"
+	},
+	"type": "module",
+	"bin": {
+		"bitpop": "./src/cli.ts"
+	},
+	"scripts": {
+		"dev": "bun run src/cli.ts",
+		"lint": "bunx @biomejs/biome check .",
+		"lint:fix": "bunx @biomejs/biome check --write .",
+		"test": "bun test"
+	},
+	"dependencies": {
+		"@nozbe/microfuzz": "^1.0.0",
+		"ink": "^5.1.0",
+		"otpauth": "^9.4.1",
+		"react": "^18.3.1",
+		"yaml": "^2.7.0"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^1.9.4",
+		"@types/bun": "^1.1.14",
+		"@types/react": "^18.3.18"
+	},
+	"peerDependencies": {
+		"typescript": "^5.0.0"
+	}
+}

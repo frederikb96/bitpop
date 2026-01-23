@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+
+# Development data (separate from production)
+.data-dev/
+
+# AI tooling context (separate git repo)
+.claude/
+
+# Bun
+bun.lockb
+
+# Build artifacts
+dist/
+*.tsbuildinfo
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment overrides (not .envrc which is committed)
+.env.local
