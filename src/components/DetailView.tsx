@@ -31,7 +31,8 @@ function LoginDetails({ item }: { item: BwItem }) {
 			<Field label="Password" value={login.password} secret />
 			{login.totp && <Field label="TOTP" value="(has TOTP)" />}
 			{login.uris?.map((uri, idx) => (
-				<Field key={uri.uri} label={`URL ${idx + 1}`} value={uri.uri} />
+				// biome-ignore lint/suspicious/noArrayIndexKey: URIs lack unique IDs
+				<Field key={idx} label={`URL ${idx + 1}`} value={uri.uri} />
 			))}
 		</>
 	);
@@ -103,6 +104,26 @@ function SecureNoteDetails({ item }: { item: BwItem }) {
 	return <Field label="Notes" value={item.notes} />;
 }
 
+function CustomFields({ item }: { item: BwItem }) {
+	if (!item.fields || item.fields.length === 0) return null;
+
+	return (
+		<Box flexDirection="column" marginTop={1}>
+			<Text color="gray" dimColor>
+				Custom Fields:
+			</Text>
+			{item.fields.map((field, idx) => (
+				<Box key={`${field.name}-${idx}`} paddingLeft={1}>
+					<Text color="gray">{field.name}: </Text>
+					<Text color={field.type === 1 ? "yellow" : "white"}>
+						{field.value ?? ""}
+					</Text>
+				</Box>
+			))}
+		</Box>
+	);
+}
+
 export function DetailView({ item }: DetailViewProps) {
 	return (
 		<Box flexDirection="column" padding={1}>
@@ -126,11 +147,13 @@ export function DetailView({ item }: DetailViewProps) {
 						<Field label="Notes" value={item.notes} />
 					</Box>
 				)}
+
+				<CustomFields item={item} />
 			</Box>
 
 			<Box marginTop={1}>
 				<Text color="gray">
-					[Ctrl+U]ser [Ctrl+P]ass [Ctrl+T]OTP | [Esc] back | [Ctrl+D] quit
+					[Ctrl+U]ser [Ctrl+P]ass [Ctrl+T]OTP [Ctrl+E]dit [d]elete | [Esc] back
 				</Text>
 			</Box>
 		</Box>

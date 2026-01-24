@@ -12,8 +12,11 @@ interface ItemForSearch {
 	searchText: string;
 }
 
+export type SortMode = "default" | "date";
+
 export function useSearch(items: BwItem[]) {
 	const [query, setQuery] = useState("");
+	const [sortMode, setSortMode] = useState<SortMode>("default");
 
 	// Prepare items for search: combine name + URIs
 	const searchItems = useMemo<ItemForSearch[]>(() => {
@@ -35,23 +38,39 @@ export function useSearch(items: BwItem[]) {
 
 	// Compute results
 	const results = useMemo<SearchResult[]>(() => {
+		// Sort by revision date (newest first)
+		const sortByDate = (a: SearchResult, b: SearchResult): number => {
+			const dateA = a.item.revisionDate ?? "";
+			const dateB = b.item.revisionDate ?? "";
+			return dateB.localeCompare(dateA);
+		};
+
 		if (!query.trim()) {
-			// No query - return all items sorted by name
-			return items
-				.map((item) => ({ item, score: 0 }))
-				.sort((a, b) => a.item.name.localeCompare(b.item.name));
+			// No query - return all items
+			const mapped = items.map((item) => ({ item, score: 0 }));
+			if (sortMode === "date") {
+				return mapped.sort(sortByDate);
+			}
+			return mapped.sort((a, b) => a.item.name.localeCompare(b.item.name));
 		}
 
 		const matches = fuzzySearch(query.toLowerCase());
-		return matches.map((match) => ({
+		const mapped = matches.map((match) => ({
 			item: match.item.item,
 			score: match.score,
 		}));
-	}, [query, items, fuzzySearch]);
+
+		if (sortMode === "date") {
+			return mapped.sort(sortByDate);
+		}
+		return mapped;
+	}, [query, items, fuzzySearch, sortMode]);
 
 	return {
 		query,
 		setQuery,
 		results,
+		sortMode,
+		setSortMode,
 	};
 }

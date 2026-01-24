@@ -17,12 +17,7 @@ export function ShortcutMode({ shortcuts }: ShortcutModeProps) {
 					<Text color="gray">No shortcuts configured.</Text>
 				</Box>
 				<Box marginTop={1}>
-					<Text color="gray">
-						Add shortcuts in ~/.config/bitpop/config.yaml
-					</Text>
-				</Box>
-				<Box marginTop={1}>
-					<Text color="gray">[Esc] to exit shortcut mode</Text>
+					<Text color="gray">[Ctrl+E] edit config | [Esc] back</Text>
 				</Box>
 			</Box>
 		);
@@ -44,7 +39,7 @@ export function ShortcutMode({ shortcuts }: ShortcutModeProps) {
 				))}
 			</Box>
 			<Box marginTop={1}>
-				<Text color="gray">[Esc] to exit shortcut mode</Text>
+				<Text color="gray">[Ctrl+E] edit config | [Esc] back</Text>
 			</Box>
 		</Box>
 	);

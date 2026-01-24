@@ -47,6 +47,13 @@ export interface BwSshKey {
 	keyFingerprint?: string;
 }
 
+export interface BwField {
+	name: string;
+	value?: string;
+	type: number; // 0=text, 1=hidden, 2=boolean
+	linkedId?: string;
+}
+
 export const CipherType = Object.freeze({
 	Login: 1,
 	SecureNote: 2,
@@ -69,7 +76,10 @@ export interface BwItem {
 	identity?: BwIdentity;
 	sshKey?: BwSshKey;
 	secureNote?: { type: number };
+	fields?: BwField[];
 	reprompt: number;
+	revisionDate?: string;
+	creationDate?: string;
 }
 
 function runBw(
@@ -182,11 +192,71 @@ export function listItems(session: string): BwItem[] {
 	}
 }
 
-export function getTotp(itemId: string, session: string): string | null {
-	const result = runBw(["get", "totp", itemId], session);
+/**
+ * Create a new item in the vault.
+ */
+export function createItem(
+	session: string,
+	item: Partial<BwItem>,
+): { success: boolean; item?: BwItem; error?: string } {
+	const json = JSON.stringify(item);
+	const encoded = Buffer.from(json).toString("base64");
+
+	const result = runBw(["create", "item", encoded], session);
 	if (result.exitCode !== 0) {
-		return null;
+		return { success: false, error: result.stderr || "Failed to create item" };
 	}
 
-	return result.stdout.trim();
+	try {
+		const created = JSON.parse(result.stdout) as BwItem;
+		return { success: true, item: created };
+	} catch {
+		return { success: false, error: "Failed to parse created item response" };
+	}
+}
+
+/**
+ * Edit an existing item in the vault.
+ */
+export function editItem(
+	session: string,
+	itemId: string,
+	item: Partial<BwItem>,
+): { success: boolean; item?: BwItem; error?: string } {
+	const json = JSON.stringify(item);
+	const encoded = Buffer.from(json).toString("base64");
+
+	const result = runBw(["edit", "item", itemId, encoded], session);
+	if (result.exitCode !== 0) {
+		return { success: false, error: result.stderr || "Failed to edit item" };
+	}
+
+	try {
+		const updated = JSON.parse(result.stdout) as BwItem;
+		return { success: true, item: updated };
+	} catch {
+		return { success: false, error: "Failed to parse updated item response" };
+	}
+}
+
+/**
+ * Delete an item (move to trash).
+ * Use permanent=true for permanent deletion.
+ */
+export function deleteItem(
+	session: string,
+	itemId: string,
+	permanent = false,
+): { success: boolean; error?: string } {
+	const args = ["delete", "item", itemId];
+	if (permanent) {
+		args.push("-p");
+	}
+
+	const result = runBw(args, session);
+	if (result.exitCode !== 0) {
+		return { success: false, error: result.stderr || "Failed to delete item" };
+	}
+
+	return { success: true };
 }

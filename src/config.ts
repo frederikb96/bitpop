@@ -9,18 +9,48 @@ export interface Shortcut {
 	description?: string;
 }
 
+export interface PasswordGenerationConfig {
+	type: "random" | "passphrase";
+	// Random password options
+	length: number;
+	uppercase: boolean;
+	lowercase: boolean;
+	number: boolean;
+	special: boolean;
+	// Passphrase options
+	words: number;
+	separator: string;
+	capitalize: boolean;
+	includeNumber: boolean;
+}
+
 export interface Config {
 	auto_close_hours: number;
 	clipboard_clear_seconds: number;
 	max_visible_entries: number;
 	shortcuts: Shortcut[];
+	password_generation: PasswordGenerationConfig;
 }
+
+const DEFAULT_PASSWORD_GENERATION: PasswordGenerationConfig = {
+	type: "passphrase",
+	length: 16,
+	uppercase: true,
+	lowercase: true,
+	number: true,
+	special: true,
+	words: 5,
+	separator: "-",
+	capitalize: true,
+	includeNumber: true,
+};
 
 const DEFAULT_CONFIG: Config = {
 	auto_close_hours: 4,
 	clipboard_clear_seconds: 30,
 	max_visible_entries: 30,
 	shortcuts: [],
+	password_generation: DEFAULT_PASSWORD_GENERATION,
 };
 
 /**
@@ -65,6 +95,37 @@ function isValidShortcut(shortcut: unknown): shortcut is Shortcut {
 	);
 }
 
+function validatePasswordGeneration(
+	pg: Partial<PasswordGenerationConfig> | undefined,
+): PasswordGenerationConfig {
+	const defaults = DEFAULT_PASSWORD_GENERATION;
+	if (!pg || typeof pg !== "object") return defaults;
+
+	return {
+		type: pg.type === "random" ? "random" : "passphrase",
+		length:
+			typeof pg.length === "number" && pg.length >= 5
+				? pg.length
+				: defaults.length,
+		uppercase:
+			typeof pg.uppercase === "boolean" ? pg.uppercase : defaults.uppercase,
+		lowercase:
+			typeof pg.lowercase === "boolean" ? pg.lowercase : defaults.lowercase,
+		number: typeof pg.number === "boolean" ? pg.number : defaults.number,
+		special: typeof pg.special === "boolean" ? pg.special : defaults.special,
+		words:
+			typeof pg.words === "number" && pg.words >= 3 ? pg.words : defaults.words,
+		separator:
+			typeof pg.separator === "string" ? pg.separator : defaults.separator,
+		capitalize:
+			typeof pg.capitalize === "boolean" ? pg.capitalize : defaults.capitalize,
+		includeNumber:
+			typeof pg.includeNumber === "boolean"
+				? pg.includeNumber
+				: defaults.includeNumber,
+	};
+}
+
 function validateConfig(parsed: Partial<Config>): Config {
 	const config = { ...DEFAULT_CONFIG, ...parsed };
 
@@ -95,6 +156,10 @@ function validateConfig(parsed: Partial<Config>): Config {
 		config.shortcuts = config.shortcuts.filter(isValidShortcut);
 	}
 
+	config.password_generation = validatePasswordGeneration(
+		parsed.password_generation,
+	);
+
 	return config;
 }
 
@@ -108,7 +173,14 @@ export function loadConfig(): Config {
 	}
 
 	const raw = readFileSync(configPath, "utf-8");
-	const parsed = parseYaml(raw) as Partial<Config>;
+
+	// Handle corrupt config gracefully - fall back to defaults
+	let parsed: Partial<Config>;
+	try {
+		parsed = parseYaml(raw) as Partial<Config>;
+	} catch {
+		return DEFAULT_CONFIG;
+	}
 
 	return validateConfig(parsed);
 }
@@ -117,5 +189,5 @@ export function saveConfig(config: Config): void {
 	ensureConfigDir();
 	const configPath = getConfigPath();
 	const yaml = stringifyYaml(config);
-	writeFileSync(configPath, yaml, "utf-8");
+	writeFileSync(configPath, yaml, { encoding: "utf-8", mode: 0o600 });
 }

@@ -226,42 +226,6 @@ describe("bw/client", () => {
 		});
 	});
 
-	describe("getTotp", () => {
-		test("returns TOTP code on success", async () => {
-			mockSpawnSync.mockImplementation(() => ({
-				stdout: "123456\n",
-				stderr: "",
-				status: 0,
-			}));
-
-			mock.module("node:child_process", () => ({
-				spawnSync: mockSpawnSync,
-			}));
-
-			const { getTotp } = await import(`./client.js?t=${Date.now()}`);
-			const result = getTotp("item-id-123", "session");
-
-			expect(result).toBe("123456");
-		});
-
-		test("returns null on failure", async () => {
-			mockSpawnSync.mockImplementation(() => ({
-				stdout: "",
-				stderr: "No TOTP configured",
-				status: 1,
-			}));
-
-			mock.module("node:child_process", () => ({
-				spawnSync: mockSpawnSync,
-			}));
-
-			const { getTotp } = await import(`./client.js?t=${Date.now()}`);
-			const result = getTotp("item-without-totp", "session");
-
-			expect(result).toBeNull();
-		});
-	});
-
 	describe("checkBwInstalled", () => {
 		test("returns true when bw is installed", async () => {
 			mockSpawnSync.mockImplementation(() => ({

@@ -1,6 +1,6 @@
 {
 	"name": "bitpop",
-	"version": "0.0.0",
+	"version": "0.1.0",
 	"description": "TUI wrapper for Bitwarden CLI with fuzzy search",
 	"author": "Frederik Berg <fberg@posteo.de>",
 	"license": "MIT",
@@ -20,10 +20,11 @@
 	},
 	"dependencies": {
 		"@nozbe/microfuzz": "^1.0.0",
+		"eff-diceware-passphrase": "^3.0.0",
 		"ink": "^5.1.0",
 		"otpauth": "^9.4.1",
 		"react": "^18.3.1",
-		"yaml": "^2.7.0"
+		"yaml": "^2.8.2"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^1.9.4",
