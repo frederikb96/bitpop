@@ -101,6 +101,9 @@ export function App() {
 	// Ref to track message display timer to prevent race conditions
 	const messageTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+	// Ref to track last activity time for inactivity timeout
+	const lastActivityTimeRef = useRef(Date.now());
+
 	const showMessage = useCallback((message: string) => {
 		if (messageTimerRef.current) {
 			clearTimeout(messageTimerRef.current);
@@ -142,7 +145,7 @@ export function App() {
 		}
 	}, [state.mode, cleanup, exit]);
 
-	// Setup signal handlers and auto-close timeout
+	// Setup signal handlers and inactivity timeout
 	useEffect(() => {
 		// Signal handlers for graceful shutdown
 		const handleSignal = () => {
@@ -154,18 +157,21 @@ export function App() {
 		process.on("SIGTERM", handleSignal);
 		process.on("SIGHUP", handleSignal);
 
-		// Auto-close timeout
+		// Inactivity timeout - checks wall-clock time every 30 seconds
+		// Resets on any keypress, handles suspend/resume correctly
 		const timeoutMs = state.config.auto_close_hours * 60 * 60 * 1000;
-		const autoCloseTimer = setTimeout(() => {
-			cleanup();
-			exit();
-		}, timeoutMs);
+		const checkInterval = setInterval(() => {
+			if (Date.now() - lastActivityTimeRef.current >= timeoutMs) {
+				cleanup();
+				exit();
+			}
+		}, 30000);
 
 		return () => {
 			process.off("SIGINT", handleSignal);
 			process.off("SIGTERM", handleSignal);
 			process.off("SIGHUP", handleSignal);
-			clearTimeout(autoCloseTimer);
+			clearInterval(checkInterval);
 		};
 	}, [cleanup, exit, state.config.auto_close_hours]);
 
@@ -475,6 +481,9 @@ export function App() {
 
 	// Keyboard input handling
 	useInput((input, key) => {
+		// Reset inactivity timer on any input
+		lastActivityTimeRef.current = Date.now();
+
 		// Global: Ctrl+D or Ctrl+C to quit
 		if ((key.ctrl && input === "d") || (key.ctrl && input === "c")) {
 			cleanup();
