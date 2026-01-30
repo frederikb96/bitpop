@@ -4,11 +4,9 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
 	type BwItem,
 	CipherType,
-	checkBwInstalled,
 	createItem,
 	deleteItem,
 	editItem,
-	getBwStatus,
 	listItems,
 	lockVault,
 	syncVault,
@@ -174,27 +172,6 @@ export function App() {
 			clearInterval(checkInterval);
 		};
 	}, [cleanup, exit, state.config.auto_close_hours]);
-
-	// Check BW status on mount
-	useEffect(() => {
-		if (!checkBwInstalled()) {
-			setState((s) => ({
-				...s,
-				mode: "error",
-				error: "Bitwarden CLI (bw) not found. Please install it first.",
-			}));
-			return;
-		}
-
-		const status = getBwStatus();
-		if (status.status === "unauthenticated") {
-			setState((s) => ({
-				...s,
-				mode: "error",
-				error: 'Not logged in to Bitwarden. Run "bw login" first.',
-			}));
-		}
-	}, []);
 
 	// Handle password submission
 	const handlePasswordSubmit = useCallback((password: string) => {
