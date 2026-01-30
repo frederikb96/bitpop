@@ -7,9 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-01-30
+
 ### Changed
 
 - Auto-close timeout now resets on any keypress (inactivity-based instead of absolute)
+- **Instant startup** - Password prompt now appears immediately instead of waiting 2-4s for BW CLI status checks
 
 ### Fixed
 
