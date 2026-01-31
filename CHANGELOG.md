@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-01-31
+
+### Added
+
+- TOTP expiry warning - shows yellow message when copied TOTP expires within threshold (configurable via `totp_expiry_warning_seconds`, default 5s)
+
 ## [0.1.1] - 2026-01-30
 
 ### Changed

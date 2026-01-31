@@ -21,7 +21,7 @@ import {
 import { useSearch } from "../hooks/useSearch.js";
 import { copyToClipboard, scheduleClipboardClear } from "../utils/clipboard.js";
 import { getEditor, openInEditor } from "../utils/editor.js";
-import { generateTotp } from "../utils/totp.js";
+import { generateTotpWithExpiry } from "../utils/totp.js";
 import {
 	getCreateTemplate,
 	itemToYaml,
@@ -57,6 +57,7 @@ interface AppState {
 	error: string | null;
 	config: Config;
 	message: string | null;
+	messageColor: "green" | "yellow";
 }
 
 export function App() {
@@ -71,6 +72,7 @@ export function App() {
 		error: null,
 		config: loadConfig(),
 		message: null,
+		messageColor: "green",
 	}));
 
 	const { query, setQuery, results, sortMode, setSortMode } = useSearch(
@@ -102,16 +104,19 @@ export function App() {
 	// Ref to track last activity time for inactivity timeout
 	const lastActivityTimeRef = useRef(Date.now());
 
-	const showMessage = useCallback((message: string) => {
-		if (messageTimerRef.current) {
-			clearTimeout(messageTimerRef.current);
-		}
-		setState((s) => ({ ...s, message }));
-		messageTimerRef.current = setTimeout(() => {
-			setState((s) => ({ ...s, message: null }));
-			messageTimerRef.current = null;
-		}, 2000);
-	}, []);
+	const showMessage = useCallback(
+		(message: string, color: "green" | "yellow" = "green") => {
+			if (messageTimerRef.current) {
+				clearTimeout(messageTimerRef.current);
+			}
+			setState((s) => ({ ...s, message, messageColor: color }));
+			messageTimerRef.current = setTimeout(() => {
+				setState((s) => ({ ...s, message: null }));
+				messageTimerRef.current = null;
+			}, 2000);
+		},
+		[],
+	);
 
 	// Clear timer on unmount
 	useEffect(() => {
@@ -235,12 +240,32 @@ export function App() {
 					value = item.login?.password ?? item.card?.number ?? null;
 					fieldName = "Password";
 					break;
-				case "totp":
-					if (item.login?.totp) {
-						value = generateTotp(item.login.totp);
-					}
+				case "totp": {
 					fieldName = "TOTP";
+					if (item.login?.totp) {
+						const totpResult = generateTotpWithExpiry(item.login.totp);
+						if (totpResult) {
+							value = totpResult.code;
+							if (
+								totpResult.remainingSeconds <=
+								state.config.totp_expiry_warning_seconds
+							) {
+								const copyResult = copyToClipboard(value);
+								if (copyResult.success) {
+									showMessage(
+										`TOTP copied! (expires in ${totpResult.remainingSeconds}s)`,
+										"yellow",
+									);
+									scheduleClipboardClear(state.config.clipboard_clear_seconds);
+								} else {
+									showMessage(`Copy failed: ${copyResult.error}`);
+								}
+								return;
+							}
+						}
+					}
 					break;
+				}
 			}
 
 			if (!value) {
@@ -261,6 +286,7 @@ export function App() {
 			state.selectedIndex,
 			state.session,
 			state.config.clipboard_clear_seconds,
+			state.config.totp_expiry_warning_seconds,
 			results,
 			showMessage,
 		],
@@ -814,7 +840,7 @@ export function App() {
 				<DetailView item={state.selectedItem} />
 				{state.message && (
 					<Box paddingX={1}>
-						<Text color="green">{state.message}</Text>
+						<Text color={state.messageColor}>{state.message}</Text>
 					</Box>
 				)}
 			</Box>
@@ -833,7 +859,7 @@ export function App() {
 			/>
 			{state.message && (
 				<Box marginTop={1}>
-					<Text color="green">{state.message}</Text>
+					<Text color={state.messageColor}>{state.message}</Text>
 				</Box>
 			)}
 			<Box marginTop={1}>

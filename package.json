@@ -1,6 +1,6 @@
 {
 	"name": "bitpop",
-	"version": "0.1.1",
+	"version": "0.2.0",
 	"description": "TUI wrapper for Bitwarden CLI with fuzzy search",
 	"author": "Frederik Berg <fberg@posteo.de>",
 	"license": "MIT",

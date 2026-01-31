@@ -28,6 +28,7 @@ export interface Config {
 	auto_close_hours: number;
 	clipboard_clear_seconds: number;
 	max_visible_entries: number;
+	totp_expiry_warning_seconds: number;
 	shortcuts: Shortcut[];
 	password_generation: PasswordGenerationConfig;
 }
@@ -49,6 +50,7 @@ const DEFAULT_CONFIG: Config = {
 	auto_close_hours: 4,
 	clipboard_clear_seconds: 30,
 	max_visible_entries: 30,
+	totp_expiry_warning_seconds: 5,
 	shortcuts: [],
 	password_generation: DEFAULT_PASSWORD_GENERATION,
 };
@@ -148,6 +150,14 @@ function validateConfig(parsed: Partial<Config>): Config {
 		config.max_visible_entries <= 0
 	) {
 		config.max_visible_entries = DEFAULT_CONFIG.max_visible_entries;
+	}
+
+	if (
+		typeof config.totp_expiry_warning_seconds !== "number" ||
+		config.totp_expiry_warning_seconds < 0
+	) {
+		config.totp_expiry_warning_seconds =
+			DEFAULT_CONFIG.totp_expiry_warning_seconds;
 	}
 
 	if (!Array.isArray(config.shortcuts)) {
