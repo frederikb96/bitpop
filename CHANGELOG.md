@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Bump `react` and `@types/react` from v18 to v19
+- Bump `@biomejs/biome` from v1 to v2
 - Bump `ink` from v5 to v6
 - Bump `actions/checkout` from v4 to v6 in CI workflows
 

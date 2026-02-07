@@ -1,6 +1,6 @@
 import { spawnSync } from "node:child_process";
 import { Box, Text, useApp, useInput } from "ink";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
 	type BwItem,
 	CipherType,
@@ -14,9 +14,9 @@ import {
 } from "../bw/client.js";
 import {
 	type Config,
-	type Shortcut,
 	getConfigPath,
 	loadConfig,
+	type Shortcut,
 } from "../config.js";
 import { useSearch } from "../hooks/useSearch.js";
 import { copyToClipboard, scheduleClipboardClear } from "../utils/clipboard.js";
@@ -24,8 +24,8 @@ import { getEditor, openInEditor } from "../utils/editor.js";
 import { generateTotpWithExpiry } from "../utils/totp.js";
 import {
 	getCreateTemplate,
-	itemToYaml,
 	itemsEqual,
+	itemToYaml,
 	yamlToItem,
 } from "../utils/yaml.js";
 import { DetailView } from "./DetailView.js";
@@ -684,7 +684,7 @@ export function App() {
 
 			// Alt+1-9, Alt+0 for direct selection (relative to visible window)
 			if (key.meta && /^[1-9]$/.test(input)) {
-				const visibleIdx = Number.parseInt(input) - 1;
+				const visibleIdx = Number.parseInt(input, 10) - 1;
 				const actualIdx = scrollOffset + visibleIdx;
 				if (actualIdx < results.length) {
 					setState((s) => ({

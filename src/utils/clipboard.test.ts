@@ -23,7 +23,7 @@ describe("clipboard", () => {
 			process.env.DISPLAY = undefined;
 
 			// Need to access the internal function - import fresh module
-			const clipboardModule = await import(`./clipboard.js?t=${Date.now()}`);
+			const _clipboardModule = await import(`./clipboard.js?t=${Date.now()}`);
 
 			// detectDisplayServer is not exported, but we can test it through copyToClipboard
 			// by checking which command gets called

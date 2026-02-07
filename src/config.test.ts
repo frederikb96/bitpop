@@ -1,5 +1,4 @@
 import { afterEach, beforeEach, describe, expect, mock, test } from "bun:test";
-import { readFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
 
@@ -52,7 +51,7 @@ describe("config", () => {
 			process.env.BITPOP_CONFIG_DIR = undefined;
 
 			// Change to a directory that's definitely not the bitpop repo
-			const originalCwd = process.cwd();
+			const _originalCwd = process.cwd();
 			const mockCwd = mock(() => "/tmp/not-bitpop");
 			const realCwd = process.cwd;
 			process.cwd = mockCwd;

@@ -1,5 +1,5 @@
-import { parse as parseYaml, stringify as stringifyYaml } from "yaml";
-import type { BwField, BwItem, BwLogin, BwUri } from "../bw/client.js";
+import { parse as parseYaml } from "yaml";
+import type { BwItem, BwLogin, BwUri } from "../bw/client.js";
 
 /**
  * YAML representation of a login item for human editing.

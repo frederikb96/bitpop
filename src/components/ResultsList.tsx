@@ -1,5 +1,4 @@
 import { Box, Text } from "ink";
-import React from "react";
 import { type BwItem, CipherType } from "../bw/client.js";
 import type { SearchResult } from "../hooks/useSearch.js";
 

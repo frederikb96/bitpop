@@ -1,5 +1,4 @@
 import { Box, Text } from "ink";
-import React from "react";
 import type { Shortcut } from "../config.js";
 
 interface ShortcutModeProps {

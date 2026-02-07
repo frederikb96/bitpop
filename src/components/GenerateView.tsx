@@ -1,5 +1,5 @@
 import { Box, Text, useInput } from "ink";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { PasswordGenerationConfig } from "../config.js";
 import { generatePassword } from "../utils/password.js";
 
