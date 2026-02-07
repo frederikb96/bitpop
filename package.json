@@ -23,13 +23,13 @@
 		"eff-diceware-passphrase": "^3.0.0",
 		"ink": "^6.0.0",
 		"otpauth": "^9.4.1",
-		"react": "^19.0.0",
+		"react": "^18.3.1",
 		"yaml": "^2.8.2"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^1.9.4",
 		"@types/bun": "^1.1.14",
-		"@types/react": "^19.0.0"
+		"@types/react": "^18.3.18"
 	},
 	"peerDependencies": {
 		"typescript": "^5.0.0"
