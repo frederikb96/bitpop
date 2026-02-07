@@ -27,7 +27,7 @@
 		"yaml": "^2.8.2"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "^1.9.4",
+		"@biomejs/biome": "^2.0.0",
 		"@types/bun": "^1.1.14",
 		"@types/react": "^19.0.0"
 	},
