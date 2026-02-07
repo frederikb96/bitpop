@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Bump `ink` from v5 to v6
+- Bump `actions/checkout` from v4 to v6 in CI workflows
+
 ## [0.2.0] - 2026-01-31
 
 ### Added
